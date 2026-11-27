@@ -16,41 +16,38 @@ h1 {font-size:clamp(2rem,6vw,3.25rem);margin:0 0 .65rem}
 h2 {font-size:1.6rem;margin:2.25rem 0 1rem}
 p {margin:.5rem 0 1rem}
 
-main {max-width:44rem;padding:clamp(1rem,4vw,2.5rem);background:white;border:1px solid #d8ded9;border-radius:.8rem}
-.card {display:block;width:100%;height:auto}
-.actions {display:flex;gap:.55rem 1rem;flex-wrap:wrap;align-items:center;margin-top:1rem}
+main {max-width:44rem}
+.recruiter-card {display:block;width:100%;height:auto;border-radius:12px}
+.recruiter-tools {display:flex;flex-wrap:wrap;gap:.55rem 1rem;align-items:center;margin-top:.9rem}
 button {font:inherit;color:white;background:#245348;border:0;border-radius:.4rem;padding:.5rem .8rem;cursor:pointer}
-.fallback {margin-top:1rem}
-pre {font:inherit;white-space:pre-wrap;overflow-wrap:anywhere}
+.recruiter-prompt {font:inherit;white-space:pre-wrap;overflow-wrap:anywhere}
 
 </style>
 </head>
 <body><div class="wrap">
 <nav aria-label="Main navigation"><a href="./">Portfolio</a><a href="cv.html">Short CV</a><a href="cv-full.html">Full CV</a><a href="for-hr.html">For HR</a></nav>
-<main><h1>For HR</h1>
-<p>Drag this card into your AI assistant, or copy the prompt.</p>
-<img class="card" src="hr-card.png" width="1440" height="408" alt="Read the portfolio and CV, including the cases and results. Which of our open roles fit best, and why? Ask for job descriptions if needed. https://olenichsmartphone-afk.github.io/serhii-olenich-portfolio/portfolio-text.html">
-<div class="actions"><button id="copy" type="button">Copy prompt</button><a href="portfolio-text.html">Read portfolio</a><span id="status" role="status"></span></div>
-<details class="fallback"><summary>View prompt</summary><pre id="prompt">Read the portfolio and CV, including the cases and results.
-Which of our open roles fit best, and why?
-Ask for job descriptions if needed.
-<a href="portfolio-text.html">https://olenichsmartphone-afk.github.io/serhii-olenich-portfolio/portfolio-text.html</a></pre></details></main></div>
+<main><h1>For HR</h1><p class="recruiter-help">Drag the card into your AI assistant.</p><img class="recruiter-card" src="hr-card.png" width="1440" height="410" alt="Compare this portfolio and CV with our open roles. https://olenichsmartphone-afk.github.io/serhii-olenich-portfolio/portfolio-text.html" draggable="true">
+<div class="recruiter-tools"><button class="button" type="button" data-copy-recruiter>Copy prompt</button><span class="recruiter-status" role="status"></span></div>
+<pre class="recruiter-prompt" hidden>Compare this portfolio and CV with our open roles.
+https://olenichsmartphone-afk.github.io/serhii-olenich-portfolio/portfolio-text.html</pre></main></div>
 <script>
-const prompt = document.querySelector("#prompt");
-const status = document.querySelector("#status");
-document.querySelector("#copy").addEventListener("click", async () => {
-  try {
-    await navigator.clipboard.writeText(prompt.textContent);
-    status.textContent = "Prompt copied.";
-  } catch {
-    prompt.closest("details").open = true;
-    const range = document.createRange();
-    range.selectNodeContents(prompt);
-    const selection = window.getSelection();
-    selection.removeAllRanges();
-    selection.addRange(range);
-    status.textContent = "Prompt selected. Press Ctrl+C or Command+C.";
-  }
-});
-</script>
+function setupRecruiterCopy(container) {
+  const prompt = container.querySelector(".recruiter-prompt");
+  const status = container.querySelector(".recruiter-status");
+  container.querySelector("[data-copy-recruiter]").addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(prompt.textContent);
+      status.textContent = "Copied.";
+    } catch {
+      prompt.hidden = false;
+      const range = document.createRange();
+      range.selectNodeContents(prompt);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      status.textContent = "Press Ctrl+C or Command+C to copy.";
+    }
+  });
+}
+setupRecruiterCopy(document);</script>
 </body></html>
